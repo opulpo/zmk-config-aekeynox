@@ -110,7 +110,7 @@
 // when entering the navigation layer, Alt will only be released when nav is
 // released. This enables one-handed alt-tabs, but may cause unwanted side effects.
 
-#define ENABLE_MOD_HOLD_NAVIGATION
+// #define ENABLE_MOD_HOLD_NAVIGATION
 
 // Uncomment the following line to enable shift as a pinky HRM.
 // Useful for combined shortcuts, but NOT MEANT to type text!
@@ -122,7 +122,7 @@
 // a pinky key. Useful for one-handed home row mods, when the modifier and
 // keycode ar on the same key (i.e. Ctrl + D)
 
-// #define PINKY_MOD_HOLD
+#define PINKY_MOD_HOLD
 
 // Uncomment the following line to swap Space and Backspace.
 // Beware: this increases the typing load of the left thumb.
