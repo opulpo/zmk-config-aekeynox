@@ -14,7 +14,7 @@
 // #define KB_LAYOUT_BEPO
 // #define KB_LAYOUT_BEPOLAR
 // #define KB_LAYOUT_DVORAK
-// #define KB_LAYOUT_ERGOL
+#define KB_LAYOUT_ERGOL
 // #define KB_LAYOUT_ERGLACE
 // #define KB_LAYOUT_QWERTY_INTL
 // #define KB_LAYOUT_QWERTY_LAFAYETTE
@@ -23,7 +23,7 @@
 // Uncomment one of the following lines if the host computer doen't run Windows.
 
 // #define MACOS
-// #define LINUX
+#define LINUX
 
 
 /******************************************************************************
@@ -64,7 +64,7 @@
 
 // #define HT_NONE
 // #define HT_THUMB_TAPS
-// #define HT_HOME_ROW_MODS  // (default behavior)
+#define HT_HOME_ROW_MODS  // (default behavior)
 // #define HT_TWO_THUMB_KEYS
 
 // Timing is key! Keep the default value if unsure.
@@ -80,7 +80,7 @@
 // hold-taps include the ones that don’t produce text when tapped.
 // Keep this value low if you press Enter or Escape by mistake too often.
 
-// #define SHORT_TAPPING_TERM 150
+#define SHORT_TAPPING_TERM 180
 
 // When tapping then holding the same tap-hold, if the delay between the two
 // key presses is lower than `QUICK_TAP`, the tap-hold will hold the tap action
@@ -102,7 +102,7 @@
 //  + Escape under the left thumb (direct access)
 // Highly recommended for Vim users, obviously. :-)
 
-// #define VIM_NAVIGATION
+#define VIM_NAVIGATION
 
 // [Experimental]
 // Uncomment the following line to enable the "mod-hold behavior" on the left
