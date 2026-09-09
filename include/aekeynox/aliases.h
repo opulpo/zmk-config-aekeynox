@@ -70,3 +70,7 @@
   #define X_PREV &kp LA(LEFT)
   #define X_NEXT &kp LA(RIGHT)
 #endif
+
+#define X_SHGRAVE  &kp LS(S_GRAVE)
+#define X_PREVTAB &kp LC(LS(TAB))
+#define X_NEXTTAB &kp LC(TAB)
