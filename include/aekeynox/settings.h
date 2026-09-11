@@ -14,7 +14,7 @@
 // #define KB_LAYOUT_BEPO              // France
 // #define KB_LAYOUT_BEPOLAR           // France
 // #define KB_LAYOUT_DVORAK            // US
-// #define KB_LAYOUT_ERGOL             // France
+#define KB_LAYOUT_ERGOL             // France
 // #define KB_LAYOUT_ERGLACE           // France
 // #define KB_LAYOUT_QWERTY_BR         // Brazil
 // #define KB_LAYOUT_QWERTY_DK         // Denmark
@@ -158,7 +158,7 @@
 // when entering the navigation layer, Alt will only be released when nav is
 // released. This enables one-handed alt-tabs, but may cause unwanted side effects.
 
-// #define ENABLE_MOD_HOLD_NAVIGATION
+#define ENABLE_MOD_HOLD_NAVIGATION
 
 // Uncomment the following line to enable shift as a pinky HRM.
 // Useful for combined shortcuts, but NOT MEANT to type text!
