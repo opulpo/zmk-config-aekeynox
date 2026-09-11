@@ -1,4 +1,5 @@
-#include <dt-bindings/zmk/keys.h>
+// United States (ANSI)
+// https://kbdlayout.info/kbdus
 
 /**
  * Action Combos
@@ -61,3 +62,36 @@
 #define S_COMMA &kp COMMA
 #define S_DOT   &kp DOT
 #define S_MONEY &kp DLLR
+
+/**
+ * Programmers' Variants (Eastern Europe)
+ */
+
+// Latvia
+// https://kbdlayout.info/kbdlv1
+#ifdef KB_LAYOUT_QWERTY_LV
+  #define KB_EXTRA_LAYERS_ALTGR
+#endif
+
+// Poland
+// https://kbdlayout.info/kbdpl1
+#ifdef KB_LAYOUT_QWERTY_PL
+  #define KB_EXTRA_LAYERS_ALTGR
+#endif
+
+// Romania
+// https://kbdlayout.info/kbdus
+#ifdef KB_LAYOUT_QWERTY_RO
+  #define KB_EXTRA_LAYERS_ALTGR
+#endif
+
+/**
+ * Caps-Word
+ */
+
+#define CAPS_WORD_SHIFT_LIST \
+    Q  W  E  R  T    Y  U  I  O  P \
+    A  S  D  F  G    H  J  K  L \
+    Z  X  C  V  B    N  M
+
+#define CAPS_WORD_CONTINUE_LIST

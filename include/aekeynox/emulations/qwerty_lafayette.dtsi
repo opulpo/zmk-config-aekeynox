@@ -10,6 +10,12 @@
   };
 };
 
+#define  K_ODKS    &mo ODK_SHIFT_LAYER  // Shift key in the 1dk layer
+#define SK_ODKS &EZ_SL(ODK_SHIFT_LAYER) // Shift key in the 1dk layer (sticky)
+
+#include "nbsp.dtsi"
+#include "ergol_num.dtsi"
+
 
 /******************************************************************************
  * Base Layer (host-specific)
@@ -20,10 +26,10 @@
   &base_layer {
     display-name = "Base";
     bindings = <SELENIUM_KEYMAP_BINDINGS(
-      &kp TAB    ,  &kp A  &kp Z  &kp E  &kp R  &kp T   ,   &kp Y  &kp U    &kp I  &kp O  &kp P   ,  &kp BACKSPACE ,
-      &kp ESCAPE ,  H_A Q  H_S S  H_D D  H_F F  &kp G   ,   &kp H  H_J J    H_K K  H_L L  &apos   ,  &kp ENTER     ,
-      &kp LSHIFT ,  &kp W  &kp X  &kp C  &kp V  &kp B   ,   &kp N  &kp SEMI &comma &dot   &slash  ,  &kp RSHIFT    ,
-         LTHUMB_TUCK , LTHUMB_HOME , LTHUMB_REACH   ,   RTHUMB_REACH , RTHUMB_HOME , RTHUMB_TUCK
+      &kp LTOP   ,  &kp A  &kp Z  &kp E  &kp R  &kp T   ,   &kp Y  &kp U    &kp I  &kp O  &kp P   ,  &kp RTOP   ,
+      &kp LHOME  ,  &H4 Q  &H3 S  &H2 D  &H1 F  &kp G   ,   &kp H  &H1 J    &H2 K  &H3 L  &apos   ,  &kp RHOME  ,
+      &kp LSHIFT ,  &kp W  &kp X  &kp C  &kp V  &kp B   ,   &kp N  &kp SEMI &comma &dot   &slash  ,  &kp RSHIFT ,
+             LTHUMB_TUCK , LTHUMB_HOME , LTHUMB_REACH   ,   RTHUMB_REACH , RTHUMB_HOME , RTHUMB_TUCK
     )>;
   };
   #define K_DIA &kp LBRC // diaeresis
@@ -33,10 +39,10 @@
   &base_layer {
     display-name = "Base";
     bindings = <SELENIUM_KEYMAP_BINDINGS(
-      &kp TAB    ,  &kp Q  &kp W  &kp E  &kp R  &kp T   ,   &kp Y  &kp U  &kp I  &kp O  &kp P     ,  &kp BACKSPACE ,
-      &kp ESCAPE ,  H_A A  H_S S  H_D D  H_F F  &kp G   ,   &kp H  H_J J  H_K K  H_L L  &apos     ,  &kp ENTER     ,
-      &kp LSHIFT ,  &kp Z  &kp X  &kp C  &kp V  &kp B   ,   &kp N  &kp M  &comma &dot   &kp FSLH  ,  &kp RSHIFT    ,
-         LTHUMB_TUCK , LTHUMB_HOME , LTHUMB_REACH   ,   RTHUMB_REACH , RTHUMB_HOME , RTHUMB_TUCK
+      &kp LTOP   ,  &kp Q  &kp W  &kp E  &kp R  &kp T   ,   &kp Y  &kp U  &kp I  &kp O  &kp P     ,  &kp RTOP   ,
+      &kp LHOME  ,  &H4 A  &H3 S  &H2 D  &H1 F  &kp G   ,   &kp H  &H1 J  &H2 K  &H3 L  &apos     ,  &kp RHOME  ,
+      &kp LSHIFT ,  &kp Z  &kp X  &kp C  &kp V  &kp B   ,   &kp N  &kp M  &comma &dot   &kp FSLH  ,  &kp RSHIFT ,
+             LTHUMB_TUCK , LTHUMB_HOME , LTHUMB_REACH   ,   RTHUMB_REACH , RTHUMB_HOME , RTHUMB_TUCK
     )>;
   };
   #define K_DIA &kp DQT // diaeresis
@@ -47,19 +53,8 @@
 
 
 /******************************************************************************
- * NumRow and 1DK Layers (non-ASCII chars, host-agnostic)
+ * 1DK Layers (non-ASCII chars, host-agnostic)
 ******************************************************************************/
-
-// hybrid Ergol/Lafayette NumRow
-&num_row_layer {
-  display-name = "NumRow";
-  bindings = <SELENIUM_KEYMAP_BINDINGS(
-    &trans  ,  C_EURO  C_LGQT  C_RGQT  S_DLLR  S_PRCNT  ,   S_CARET S_AMPS  S_STAR  S_LPAR  S_RPAR  ,  &trans ,
-    &trans  ,  S_N1    S_N2    S_N3    S_N4    S_N5     ,   S_N6    S_N7    S_N8    S_N9    S_N0    ,  &trans ,
-    &trans  ,  C_LODQT C_LDQT  C_RDQT  C_CENT  C_DEG    ,   S_MINUS S_COMMA S_DOT   S_COLON S_FSLH  ,  &trans ,
-                             &trans , C_NBSP , &trans   ,   &trans , C_NBSP , &trans
-  )>;
-};
 
 / {
   keymap {
@@ -68,19 +63,19 @@
     one_dead_key {
       display-name = "1dk";
       bindings = <SELENIUM_KEYMAP_BINDINGS(
-        &trans  ,  C_AE    C_EACU  C_EGRV  C_OCRC  &trans   ,   &trans  C_UGRV  C_IDIA  C_OE    &trans  ,  &trans ,
-        &trans  ,  C_AGRV  C_SZ    C_ECRC  S_MINUS C_NDASH  ,   &trans  C_UCRC  C_ICRC  C_OCRC  K_DIA   ,  &trans ,
-        &trans  ,  C_ACRC  C_MULT  C_CCDL  S_UNDER C_MDASH  ,   C_NTLD  C_MICRO C_MDOT  C_ELLIP &trans  ,  &trans ,
-                &EZ_SL(ODK_SHIFT_LAYER) , C_APOS , &trans   ,   &trans , C_APOS , &trans
+        &trans  ,  C_AE    C_EACU  C_EGRV  C_OCIR  &trans   ,   &trans  C_UGRV  C_IDIA  C_OE    &trans  ,  &trans ,
+        &trans  ,  C_AGRV  C_SZ    C_ECIR  S_MINUS C_NDASH  ,   &trans  C_UCIR  C_ICIR  C_OCIR  K_DIA   ,  &trans ,
+        K_ODKS  ,  C_ACIR  C_MULT  C_CCDL  S_UNDER C_MDASH  ,   C_NTLD  C_MICRO C_MDOT  C_ELLIP &trans  ,  K_ODKS ,
+                                SK_ODKS , C_APOS , &trans   ,   &trans , C_APOS , &trans
       )>;
     };
 
     one_dead_key_shift {
       display-name = "1dkShift";
       bindings = <SELENIUM_KEYMAP_BINDINGS(
-        &trans  ,  SC_AE   SC_EACU SC_EGRV SC_OCRC &trans   ,   &trans  SC_UGRV SC_IDIA SC_OE   &trans  ,  &trans ,
-        &trans  ,  SC_AGRV C_SZ    SC_ECRC C_FEM   &trans   ,   &trans  SC_UCRC SC_ICRC SC_OCRC C_LCXE  ,  &trans ,
-        &trans  ,  SC_ACRC &trans  SC_CCDL &trans  &trans   ,   SC_NTLD C_MASC  C_BLLT  &trans  C_KRAMQ ,  &trans ,
+        &trans  ,  SC_AE   SC_EACU SC_EGRV SC_OCIR &trans   ,   &trans  SC_UGRV SC_IDIA SC_OE   &trans  ,  &trans ,
+        &trans  ,  SC_AGRV C_SZ    SC_ECIR C_FEM   &trans   ,   &trans  SC_UCIR SC_ICIR SC_OCIR C_LCXE  ,  &trans ,
+        &trans  ,  SC_ACIR &trans  SC_CCDL &trans  &trans   ,   SC_NTLD C_MASC  C_BLLT  &trans  C_KRAMQ ,  &trans ,
                                  &trans , &trans , &trans   ,   &trans , &trans , &trans
       )>;
     };

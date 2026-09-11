@@ -1,4 +1,24 @@
-#include <dt-bindings/zmk/keys.h>
+// France
+// https://kbdlayout.info/kbdfr
+
+/**
+ * OS_SELECT
+ */
+
+#include <zephyr/sys/util_macro.h>
+
+#define OS_SELECT_OR_DEFAULT(behavior, default) \
+  COND_CODE_1(IS_EMPTY(behavior), (default), (behavior))
+
+#ifdef LINUX
+  #define OS_SELECT(default, i2, i3, behavior) OS_SELECT_OR_DEFAULT(behavior, default)
+#elifdef MACOS
+  #define OS_SELECT(default, i2, behavior, i4) OS_SELECT_OR_DEFAULT(behavior, default)
+#elifdef ENABLE_CP1252_ALT_CODES
+  #define OS_SELECT(default, behavior, i3, i4) OS_SELECT_OR_DEFAULT(behavior, default)
+#else
+  #define OS_SELECT(behavior, i2, i3, i4) behavior
+#endif
 
 /**
  * Action Combos
@@ -15,68 +35,17 @@
 #define X_ALL   &kp CMD(Q)
 
 /**
- * Arsenik Symbols:
- *   ^<>$% @&*'`
- *   {()}= \+-/"
- *   ~[]_# |!;:?
+ * Diacritics
  */
 
-// first row
-#define S_CARET &kp RA(N9)
-#define S_LT    &kp NUBS
-#define S_GT    &kp PIPE2
-#define S_DLLR  &kp RBKT
-#define S_PRCNT &kp LS(SQT)
-#define S_AT    &kp RA(N0)
-#define S_AMPS  &kp N1
-#define S_STAR  &kp BSLH
-#define S_SQT   &kp N4
-#define S_GRAVE &digraph RA(N7) SPACE
-
-// second row
-#define S_LBRC  &kp RA(N4)
-#define S_LPAR  &kp N5
-#define S_RPAR  &kp MINUS
-#define S_RBRC  &kp RA(EQUAL)
-#define S_EQUAL &kp EQUAL
-#define S_BSLH  &kp RA(N8)
-#define S_PLUS  &kp PLUS
-#define S_MINUS &kp N6
-#define S_FSLH  &kp LS(DOT)
-#define S_DQT   &kp N3
-
-// third row
-#define S_TILDE &digraph RA(N2) SPACE
-#define S_LBKT  &kp RA(N5)
-#define S_RBKT  &kp RA(MINUS)
-#define S_UNDER &kp N8
-#define S_HASH  &kp RA(N3)
-#define S_PIPE  &kp RA(N6)
-#define S_EXCL  &kp FSLH
-#define S_SEMI  &kp COMMA
-#define S_COLON &kp DOT
-#define S_QMARK &kp LS(M)
-
-// extra
-#define S_COMMA &kp M
-#define S_DOT   &kp LS(COMMA)
-#define S_MONEY &kp RA(E)
-
-// GRAVE and TILDE are no dead keys on Linux
+#define DEAD_CIRCUMFLEX       LBKT
+#define DEAD_DIAERESIS        LBRC
+#define DEAD_TILDE OS_SELECT( RA(N2) ,, RA(N) , ) // n/a on Linux
+#define DEAD_GRAVE OS_SELECT( RA(N9) ,, NUHS  , ) // n/a on Linux
 #ifdef LINUX
-  #undef S_GRAVE
-  #define S_GRAVE &kp RA(N7)
-  #undef S_TILDE
-  #define S_TILDE &kp RA(N2)
+  #undef DEAD_TILDE
+  #undef DEAD_GRAVE
 #endif
-
-
-/**
- * Non-ASCII Symbols
- * https://commons.wikimedia.org/wiki/File:KB_-_AZERTY_-_FR_-_Windows_-_FR.png
- */
-
-#define SA(key) RS(RA(key))
 
 // lowercase: é à è ù ç
 #define C_EACU &kp N2  // é
@@ -85,159 +54,116 @@
 #define C_UGRV &kp SQT // ù
 #define C_CCDL &kp N9  // ç
 
-// uppercase: É À È Ù Ç
-#if defined LINUX || defined MACOS
-  #define SC_EACU &caps N2
-  #define SC_AGRV &caps N0
-  #define SC_EGRV &caps N7
-  #define SC_UGRV &caps SQT
-  #define SC_CCDL &caps N9
-#elif defined ENABLE_CP1252_ALT_CODES
-  #define SC_EACU CP1252_UPPERCASE_E_ACUTE
-  #define SC_AGRV CP1252_UPPERCASE_A_GRAVE
-  #define SC_EGRV CP1252_UPPERCASE_E_GRAVE
-  #define SC_UGRV CP1252_UPPERCASE_U_GRAVE
-  #define SC_CCDL CP1252_UPPERCASE_C_CEDILLA
+// uppercase: À È Ù       ( default      ,, macOS     , Linux     )
+#define SC_AGRV OS_SELECT ( DI_GRV LS(A) ,, &caps N0  , &caps N0  ) // À
+#define SC_EGRV OS_SELECT ( DI_GRV LS(E) ,, &caps N7  , &caps N7  ) // È
+#define SC_UGRV OS_SELECT ( DI_GRV LS(U) ,, &caps SQT , &caps SQT ) // Ù
+
+// uppercase: É Ç         ( default   , CP1252                     , macOS    , Linux    )
+#define SC_EACU OS_SELECT ( &kp LS(E) , CP1252_UPPERCASE_E_ACUTE   , &caps N2 , &caps N2 ) // É
+#define SC_CCDL OS_SELECT ( &kp LS(C) , CP1252_UPPERCASE_C_CEDILLA , &caps N9 , &caps N9 ) // Ç
+
+#include "dead_keys.h"
+
+/**
+ * Arsenik Symbols:
+ *   ^<>$% @&*'`
+ *   {()}= \+-/"
+ *   ~[]_# |!;:?
+ */
+
+#define SA(key) RS(RA(key))
+
+// first row             ( default       ,, macOS         , Linux         )
+#define S_CARET OS_SELECT( &kp RA(N9)    ,, DI_CIR SPACE  ,               )
+#define S_LT    OS_SELECT( &kp NUBS      ,, &kp GRAVE     ,               )
+#define S_GT    OS_SELECT( &kp PIPE2     ,, &kp TILDE     ,               )
+#define S_DLLR             &kp RBKT
+#define S_PRCNT            &kp LS(SQT)
+#define S_AT    OS_SELECT( &kp RA(N0)    ,, &kp NUBS      ,               )
+#define S_AMPS             &kp N1
+#define S_STAR  OS_SELECT( &kp BSLH      ,, &kp RBRC      ,               )
+#define S_SQT              &kp N4
+#define S_GRAVE OS_SELECT( DI_GRV SPACE  ,,               , &kp RA(N7)    )
+
+// second row            ( default       ,, macOS         , Linux         )
+#define S_LBRC  OS_SELECT( &kp RA(N4)    ,, &kp RA(N5)    ,               )
+#define S_LPAR             &kp N5
+#define S_RPAR             &kp MINUS
+#define S_RBRC  OS_SELECT( &kp RA(EQUAL) ,, &kp RA(MINUS) ,               )
+#define S_EQUAL            &kp EQUAL
+#define S_BSLH  OS_SELECT( &kp RA(N8)    ,, &kp SA(DOT)   ,               )
+#define S_PLUS  OS_SELECT( &kp PLUS      ,, &kp QMARK     ,               )
+#define S_MINUS OS_SELECT( &kp N6        ,, &kp EQUAL     ,               )
+#define S_FSLH             &kp LS(DOT)
+#define S_DQT              &kp N3
+
+// third row             ( default       ,, macOS         , Linux         )
+#define S_TILDE OS_SELECT( DI_TLD SPACE  ,,               , &kp RA(N2)    )
+#define S_LBKT  OS_SELECT( &kp RA(N5)    ,, &kp SA(N5)    ,               )
+#define S_RBKT  OS_SELECT( &kp RA(EQUAL) ,, &kp SA(MINUS) ,               )
+#define S_UNDER OS_SELECT( &kp N8        ,, &kp PLUS      ,               )
+#define S_HASH  OS_SELECT( &kp RA(N3)    ,, &kp PIPE2     ,               )
+#define S_PIPE  OS_SELECT( &kp RA(N6)    ,, &kp SA(L)     ,               )
+#define S_EXCL  OS_SELECT( &kp FSLH      ,, &kp N8        ,               )
+#define S_SEMI             &kp COMMA
+#define S_COLON            &kp DOT
+#define S_QMARK            &kp LS(M)
+
+// extra                 ( default       ,, macOS         , Linux         )
+#define S_COMMA            &kp M
+#define S_DOT              &kp LS(COMMA)
+#define S_MONEY OS_SELECT( &kp RA(E)     ,, &kp RA(RBKT)  ,               )
+
+/**
+ * Non-ASCII Symbols
+ */
+
+// œ, æ, ß              ( default              , CP1252              , macOS     , Linux     )
+#define  C_OE OS_SELECT ( &digraph    O     E  , CP1252_LOWERCASE_OE , &kp RA(O) ,           ) // œ
+#define SC_OE OS_SELECT ( &digraph LS(O) LS(E) , CP1252_UPPERCASE_OE , &kp SA(O) ,           ) // œ
+#define  C_AE OS_SELECT ( &digraph    Q     E  , CP1252_LOWERCASE_AE , &kp RA(Q) , &kp RA(Q) ) // æ
+#define SC_AE OS_SELECT ( &digraph LS(Q) LS(E) , CP1252_UPPERCASE_AE , &kp SA(Q) , &kp SA(Q) ) // Æ
+#define  C_SZ OS_SELECT ( &digraph    S     S  , CP1252_LOWERCASE_SZ , &kp RA(B) , &kp RA(S) ) // ß
+
+// punctuation            ( default        , CP1252                    , macOS         , Linux         )
+#define C_LODQT OS_SELECT ( &none          , CP1252_LOW_DOUBLE_QUOTE   ,               ,               ) // „
+#define C_LDQT  OS_SELECT ( &none          , CP1252_LEFT_DOUBLE_QUOTE  ,               ,               ) // “
+#define C_RDQT  OS_SELECT ( &none          , CP1252_RIGHT_DOUBLE_QUOTE ,               ,               ) // ”
+#define C_LGQT  OS_SELECT ( &kp N3         , CP1252_LEFT_GUILLEMET     , &kp RA(N7)    ,               ) // «
+#define C_RGQT  OS_SELECT ( &kp N3         , CP1252_RIGHT_GUILLEMET    , &kp SA(N7)    ,               ) // »
+#define C_APOS  OS_SELECT ( &kp N4         , CP1252_RIGHT_SINGLE_QUOTE , &kp N4        ,               ) // ’
+#define C_NDASH OS_SELECT ( &digraph N6 N6 , CP1252_EN_DASH            , &kp SA(EQUAL) ,               ) // –
+#define C_MDASH OS_SELECT ( &digraph N6 N6 , CP1252_EM_DASH            , &kp RA(EQUAL) ,               ) // —
+#define C_ELLIP OS_SELECT ( &ellipsis      , CP1252_ELLIPSIS           , &kp RA(COMMA) ,               ) // …
+#define C_BLLT  OS_SELECT ( S_MINUS        , CP1252_BULLET             , &kp SA(COMMA) ,               ) // •
+#define C_MDOT  OS_SELECT ( S_DOT          , CP1252_MIDDLE_DOT         ,               ,               ) // ·
+#define C_LCXE  OS_SELECT ( &none          , CP1252_INVERTED_XMARK     , &kp RA(N8)    , &kp SA(N1)    ) // ¡
+#define C_KRAMQ OS_SELECT ( &none          , CP1252_INVERTED_QMARK     , &kp SA(M)     , &kp SA(MINUS) ) // ¿
+#define C_FEM   OS_SELECT ( &none          , CP1252_FEMININE_ORDINAL   ,               ,               ) // ª
+#define C_MASC  OS_SELECT ( &none          , CP1252_MASCULINE_ORDINAL  ,               ,               ) // º
+#define C_NBSP  OS_SELECT ( &kp SPACE      , CP1252_NO_BREAK_SPACE     , &kp RA(SPACE) ,               )
+
+// math                   ( default   , CP1252                , macOS         , Linux         )
+#define C_EURO  OS_SELECT ( &kp RA(E) ,                       , &kp RA(RBKT)  ,               ) // €
+#define C_CENT  OS_SELECT ( &kp C     , CP1252_CENT           ,               , &kp RA(C)     ) // ¢
+#define C_MULT  OS_SELECT ( &kp X     , CP1252_MULTIPLICATION ,               , &kp SA(COMMA) ) // ×
+#define C_MICRO OS_SELECT ( &kp PIPE  ,                       , &kp RA(SEMI)  ,               ) // µ
+#define C_DEG               &kp UNDER                                                           // °
+
+/**
+ * Caps-Word
+ */
+
+#define CAPS_WORD_SHIFT_LIST \
+    Q  W  E  R  T    Y  U  I  O  P \
+    A  S  D  F  G    H  J  K  L  SEMI \
+    Z  X  C  V  B    N
+
+#ifdef LINUX
+  #define CAPS_WORD_CONTINUE_LIST N1 N4 N6 N7 N8 N9 N0 SQT \
+    DEAD_CIRCUMFLEX DEAD_DIAERESIS
 #else
-  #define SC_EACU &kp LS(E)
-  #define SC_AGRV &kp LS(Q)
-  #define SC_EGRV &kp LS(E)
-  #define SC_UGRV &kp LS(U)
-  #define SC_CCDL &kp LS(C)
-#endif
-
-// circumflex accent
-#define  C_ACRC &digraph LBKT Q     // â
-#define SC_ACRC &digraph LBKT RS(Q) // Â
-#define  C_ECRC &digraph LBKT E     // ê
-#define SC_ECRC &digraph LBKT RS(E) // Ê
-#define  C_ICRC &digraph LBKT I     // î
-#define SC_ICRC &digraph LBKT RS(I) // Î
-#define  C_OCRC &digraph LBKT O     // ô
-#define SC_OCRC &digraph LBKT RS(O) // Ô
-#define  C_UCRC &digraph LBKT U     // û
-#define SC_UCRC &digraph LBKT RS(U) // Û
-#define  C_YCRC &digraph LBKT Y     // ŷ
-#define SC_YCRC &digraph LBKT RS(Y) // Ŷ
-
-// diaeresis
-#define  C_ADIA &digraph LBRC A     // ä
-#define SC_ADIA &digraph LBRC RS(A) // Ä
-#define  C_EDIA &digraph LBRC E     // ë
-#define SC_EDIA &digraph LBRC RS(E) // Ë
-#define  C_IDIA &digraph LBRC I     // ï
-#define SC_IDIA &digraph LBRC RS(I) // Ï
-#define  C_ODIA &digraph LBRC O     // ö
-#define SC_ODIA &digraph LBRC RS(O) // Ö
-#define  C_UDIA &digraph LBRC U     // ü
-#define SC_UDIA &digraph LBRC RS(U) // Ü
-#define  C_YDIA &digraph LBRC Y     // ÿ
-#define SC_YDIA &digraph LBRC RS(Y) // Ÿ
-
-// other special letters: œ, æ, ß, ñ
-#ifdef LINUX
-  #define  C_OE &digraph O E
-  #define SC_OE &digraph LS(O) LS(E)
-  #define  C_AE &kp RA(Q) // æ
-  #define SC_AE &kp SA(Q) // æ
-  #define  C_SZ &kp RA(S) // ß
-#elifdef MACOS
-  #define  C_OE &kp RA(O) // œ
-  #define SC_OE &kp SA(O) // œ
-  #define  C_AE &kp RA(Z) // æ
-  #define SC_AE &kp SA(Z) // æ
-  #define  C_SZ &kp RA(S) // ß
-#elifdef ENABLE_CP1252_ALT_CODES
-  #define  C_OE CP1252_LOWERCASE_OE // œ
-  #define SC_OE CP1252_UPPERCASE_OE // Œ
-  #define  C_AE CP1252_LOWERCASE_AE // æ
-  #define SC_AE CP1252_UPPERCASE_AE // Æ
-  #define  C_SZ CP1252_LOWERCASE_SZ // ß
-#else // Windows without alt-codes
-  #define  C_OE &digraph O E
-  #define SC_OE &digraph LS(O) LS(E)
-  #define  C_AE &digraph Q E
-  #define SC_AE &digraph LS(Q) LS(E)
-  #define  C_SZ &digraph S S
-#endif
-#if defined LINUX || defined MACOS
-  #define  C_NTLD &kp N     // XXX
-  #define SC_NTLD &kp LS(N) // XXX
-#else
-  #define  C_NTLD &digraph RA(N2) N     // ñ
-  #define SC_NTLD &digraph RA(N2) LS(N) // ñ
-#endif
-
-// quote signs
-#ifdef LINUX
-  #define C_LODQT &kp RA(V) // „
-  #define C_LDQT  &kp RA(B) // “
-  #define C_RDQT  &kp RA(N) // ”
-  #define C_LGQT  &kp RA(W) // «
-  #define C_RGQT  &kp RA(X) // »
-  #define C_APOS  &kp SA(N) // ’
-#elifdef ENABLE_CP1252_ALT_CODES
-  #define C_LODQT CP1252_LOW_DOUBLE_QUOTE   // „
-  #define C_LDQT  CP1252_LEFT_DOUBLE_QUOTE  // “
-  #define C_RDQT  CP1252_RIGHT_DOUBLE_QUOTE // ”
-  #define C_LGQT  CP1252_LEFT_GUILLEMET     // «
-  #define C_RGQT  CP1252_RIGHT_GUILLEMET    // »
-  #define C_APOS  CP1252_RIGHT_SINGLE_QUOTE // ’
-#else // macOS or Windows without alt-codes
-  #define C_LODQT &none
-  #define C_LDQT  &none
-  #define C_RDQT  &none
-  #define C_LGQT  &kp N3 // "
-  #define C_RGQT  &kp N3 // "
-  #define C_APOS  &kp N4 // '
-#endif
-
-// punctuation (generic)
-#ifdef ENABLE_CP1252_ALT_CODES
-  #define C_NDASH CP1252_EN_DASH    // –
-  #define C_MDASH CP1252_EM_DASH    // —
-  #define C_ELLIP CP1252_ELLIPSIS   // …
-  #define C_BLLT  CP1252_BULLET     // •
-  #define C_MDOT  CP1252_MIDDLE_DOT // ·
-  #define C_NBSP  CP1252_NO_BREAK_SPACE
-#else // unsupported
-  #define C_NDASH &digraph N6 N6 // --
-  #define C_MDASH &digraph N6 N6 // --
-  #define C_ELLIP &ellipsis      // ...
-  #define C_BLLT  S_MINUS        // -
-  #define C_MDOT  S_DOT          // .
-  #define C_NBSP  &kp SPACE
-#endif
-
-// punctuation (Spanish)
-#ifdef LINUX
-  #define C_LCXE  &kp SA(N1)
-  #define C_KRAMQ &kp SA(MINUS)
-  #define C_FEM   &none
-  #define C_MASC  &none
-#elifdef ENABLE_CP1252_ALT_CODES
-  #define C_LCXE  CP1252_INVERTED_XMARK     // ¡
-  #define C_KRAMQ CP1252_INVERTED_QMARK     // ¿
-  #define C_FEM   CP1252_FEMININE_ORDINAL   // ª
-  #define C_MASC  CP1252_MASCULINE_ORDINAL  // º
-#else // macOS or Windows without alt-codes
-  #define C_LCXE  &none
-  #define C_KRAMQ &none
-  #define C_FEM   &none
-  #define C_MASC  &none
-#endif
-
-// math
-#define C_DEG   &kp UNDER // °
-#define C_MICRO &kp PIPE  // µ
-#define C_EURO  &kp RA(E) // €
-#ifdef LINUX
-  #define C_CENT  &kp RA(C)     // ¢
-  #define C_MULT  &kp SA(COMMA) // ×
-#elifdef ENABLE_CP1252_ALT_CODES
-  #define C_CENT  CP1252_CENT           // ¢
-  #define C_MULT  CP1252_MULTIPLICATION // ×
-#else // macOS or Windows without alt-codes
-  #define C_CENT  &kp C
-  #define C_MULT  &kp X
+  #define CAPS_WORD_CONTINUE_LIST N1 N2 N4 N6 N7 N8 N9 N0 SQT \
+    DEAD_CIRCUMFLEX DEAD_DIAERESIS DEAD_TILDE DEAD_GRAVE
 #endif

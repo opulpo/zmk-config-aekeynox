@@ -7,23 +7,63 @@
 ******************************************************************************/
 
 // Uncomment one of the following lines if the host computer is configured with
-// a non-QWERTY keyboard layout. This is required to set an appropriate
+// a non-QWERTY-ANSI keyboard layout. This is required to set an appropriate
 // 'Symbols' layer and relevant keyboard shortcuts in the 'Nav' layer.
 
-// #define KB_LAYOUT_AZERTY
-// #define KB_LAYOUT_BEPO
-// #define KB_LAYOUT_BEPOLAR
-// #define KB_LAYOUT_DVORAK
-#define KB_LAYOUT_ERGOL
-// #define KB_LAYOUT_ERGLACE
-// #define KB_LAYOUT_QWERTY_INTL
-// #define KB_LAYOUT_QWERTY_LAFAYETTE
+// #define KB_LAYOUT_AZERTY            // France
+// #define KB_LAYOUT_BEPO              // France
+// #define KB_LAYOUT_BEPOLAR           // France
+// #define KB_LAYOUT_DVORAK            // US
+#define KB_LAYOUT_ERGOL             // France
+// #define KB_LAYOUT_ERGLACE           // France
+// #define KB_LAYOUT_QWERTY_BR         // Brazil
+// #define KB_LAYOUT_QWERTY_DK         // Denmark
+// #define KB_LAYOUT_QWERTY_EE         // Estonia
+// #define KB_LAYOUT_QWERTY_ES         // Spain
+// #define KB_LAYOUT_QWERTY_INTL       // US (International)
+// #define KB_LAYOUT_QWERTY_IT         // Italy
+// #define KB_LAYOUT_QWERTY_LAFAYETTE  // France
+// #define KB_LAYOUT_QWERTY_LATAM      // Latin America
+// #define KB_LAYOUT_QWERTY_LV         // Latvia (Programmers)
+// #define KB_LAYOUT_QWERTY_NO         // Norway
+// #define KB_LAYOUT_QWERTY_PL         // Poland (Programmers)
+// #define KB_LAYOUT_QWERTY_PT         // Portugal
+// #define KB_LAYOUT_QWERTY_RO         // Romania (Programmers)
+// #define KB_LAYOUT_QWERTY_SE         // Sweden, Finland
+// #define KB_LAYOUT_QWERTZ_CH_DE      // Switzerland (German)
+// #define KB_LAYOUT_QWERTZ_CH_FR      // Switzerland (French)
+// #define KB_LAYOUT_QWERTZ_CZ         // Czechia
+// #define KB_LAYOUT_QWERTZ_DE         // Germany, Austria
+// #define KB_LAYOUT_QWERTZ_HR         // Bosnia, Croatia, Serbia, Slovenia
+// #define KB_LAYOUT_QWERTZ_HU         // Hungary
+// #define KB_LAYOUT_QWERTZ_SK         // Slovakia
 
 // Some keyboard layouts and shortcuts may vary between Windows / macOS / Linux.
 // Uncomment one of the following lines if the host computer doen't run Windows.
 
 // #define MACOS
 #define LINUX
+
+
+/******************************************************************************
+ * Extra Layers
+******************************************************************************/
+
+// By default, Ækeynox fits all non-ASCII layouts on a 3×10 grid by:
+//  - replacing the the semicolon key by a one-shot layer key (1dk)
+//  - adding two layers, 1dk and 1dkShift, containing all non-ASCII characters
+// These 1dk layers are defined by default to best match the requested layout,
+// but you can override them by uncommenting one of the lines below, e.g. to
+// use them along with QWERTY-intl.
+// Alternatively, you may uncomment the last line to use the outer columns
+// for 4 extra alpha keys instead of the default Tab, Escape, Backspace, Enter.
+
+// #define KB_EXTRA_LAYERS_AUTO      // default (recommended)
+// #define KB_EXTRA_LAYERS_ALTGR     // default for LV, PL, RO
+// #define KB_EXTRA_LAYERS_ALPINE    // default for CH, DE, IT
+// #define KB_EXTRA_LAYERS_IBERICAN  // default for BR, ES, LATAM, PT
+// #define KB_EXTRA_LAYERS_NORDIC    // default for DK, FI, NO, SE
+// #define KB_EXTRA_LAYERS_NONE      // no 1dk layers, use outer cols
 
 
 /******************************************************************************
@@ -38,6 +78,8 @@
 //  - Keymaps for other languages and host layouts are trickier, and provide a
 //    partial emulation only. QWERTY-intl hosts usually give the best results.
 
+// #define KB_EMULATION_COLEMAK          // host: QWERTY
+// #define KB_EMULATION_COLEMAK_DH       // host: QWERTY
 // #define KB_EMULATION_DVORAK           // host: QWERTY
 // #define KB_EMULATION_ERGOL            // host: QWERTY-intl or AZERTY
 // #define KB_EMULATION_QWERTY_LAFAYETTE // host: QWERTY-intl or AZERTY
@@ -105,6 +147,12 @@
 #define VIM_NAVIGATION
 
 // [Experimental]
+// Uncomment the following line to enable the Callum variant of the previous
+// `VIM_NAVIGATION` option. Both options are mutually exclusive.
+
+// #define CALLUM_NAVIGATION
+
+// [Experimental]
 // Uncomment the following line to enable the "mod-hold behavior" on the left
 // hand’s navigation layer key. Enabling this means that if the Alt key is held
 // when entering the navigation layer, Alt will only be released when nav is
@@ -128,3 +176,13 @@
 // Beware: this increases the typing load of the left thumb.
 
 // #define LEFT_HAND_SPACE
+
+// [Experimental]
+// Uncomment the following line to enable a hummingbird-style adaptation of
+// your keyboard layout. Keys that are originally on the ZBN/ QWERTY-positions
+// will be duplicated on a 1dk layer. This reduces the number of keys required to
+// write texts, and thus limits finger movement (at the cost of a couple of extra
+// keystrokes). The adaptations are layout-specific; as of today, only Ergol is
+// supported.
+
+// #define ENABLE_HUMMINGBIRD_MODE

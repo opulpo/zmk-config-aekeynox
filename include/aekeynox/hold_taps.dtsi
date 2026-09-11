@@ -1,6 +1,3 @@
-#include <behaviors.dtsi>
-#include <dt-bindings/zmk/keys.h>
-
 // clang-format off
 
 /**
@@ -14,12 +11,13 @@
 #define SYMBOLS_LAYER  2
 #define VIM_NAV_LAYER  3
 #define NAV_NUM_LAYER  4
-#define NUM_ROW_LAYER  5
-#define FN_MEDIA_LAYER 6
+#define CALLUM_LAYER   5
+#define NUM_ROW_LAYER  6
+#define FN_MEDIA_LAYER 7
 
 // Potentially used by other keymaps deriving from this one, who may add extra layers.
 // Make sure this stays equal to <index_of_last_layer> + 1
-#define EXTRA_LAYERS_START_INDEX 7
+#define EXTRA_LAYERS_START_INDEX 8
 
 
 /**
@@ -36,47 +34,33 @@
   #define ALT_CTL LALT
 #endif
 
-#define H_S &hrm GUI_OPT
-#define H_D &hrm CTL_CMD
-#define H_F &hrm ALT_CTL
-#define H_J &hrm ALT_CTL
-#define H_K &hrm CTL_CMD
-#define H_L &hrm GUI_OPT
+// Unconditionnal home row mods, needed by the fn/media layer, since combining
+// modifiers on the thumb-taps variant with this layer can be tricky.
+// Hopefully, this issue can be cleanly resolved with mod-holds someday.
+#define UH1 hrm ALT_CTL
+#define UH2 hrm CTL_CMD
+#define UH3 hrm GUI_OPT
+#define UH4 hrm LSHIFT
+
+#ifdef ENABLE_HOME_ROW_MODS
+  #define H1 hrm ALT_CTL
+  #define H2 hrm CTL_CMD
+  #define H3 hrm GUI_OPT
+#else
+  #define H1 kp
+  #define H2 kp
+  #define H3 kp
+#endif
 
 #if defined HRM_SHIFT && defined PINKY_MOD_HOLD
-  #define H_A    &mhhrm LSHIFT
-  #define H_SEMI &mhhrm RSHIFT
+  #define H4 mhhrm LSHIFT
 #elif defined HRM_SHIFT
-  #define H_A    &hrm LSHIFT
-  #define H_SEMI &hrm RSHIFT
+  #define H4 hrm LSHIFT
 #elif defined PINKY_MOD_HOLD
-  #define H_A    &mhkp 0
-  #define H_SEMI &mhkp 0
+  #define H4 mhkp 0
 #else
-  #define H_A    &kp
-  #define H_SEMI &kp
+  #define H4 kp
 #endif
-
-#if defined HT_HOME_ROW_MODS || defined HT_TWO_THUMB_KEYS
-  #define HRM_A    H_A A
-  #define HRM_S    H_S S
-  #define HRM_D    H_D D
-  #define HRM_F    H_F F
-  #define HRM_J    H_J J
-  #define HRM_K    H_K K
-  #define HRM_L    H_L L
-  #define HRM_SEMI H_SEMI SEMI
-#else
-  #define HRM_A    &kp A
-  #define HRM_S    &kp S
-  #define HRM_D    &kp D
-  #define HRM_F    &kp F
-  #define HRM_J    &kp J
-  #define HRM_K    &kp K
-  #define HRM_L    &kp L
-  #define HRM_SEMI &kp SEMI
-#endif
-
 
 /**
  * Thumb Keys
@@ -88,7 +72,13 @@
   #define NAV_SC &sc
 #endif
 
-#ifdef VIM_NAVIGATION
+#ifdef CALLUM_NAVIGATION
+  #define NAV_LAYER CALLUM_LAYER
+  #define NUM_LAYER NUM_ROW_LAYER
+  #define HRM_LAYER NUM_ROW_LAYER
+  #define S34_LAYER NUM_ROW_LAYER
+  #define REACH_TAP ESCAPE
+#elif defined VIM_NAVIGATION
   #define NAV_LAYER VIM_NAV_LAYER
   #define NUM_LAYER NUM_ROW_LAYER
   #define HRM_LAYER NUM_ROW_LAYER
@@ -132,20 +122,20 @@
   #define RTHUMB_HOME   &kp SPACE
   #define RTHUMB_TUCK   &mo SYMBOLS_LAYER
 #elifdef HT_THUMB_TAPS
-  #define LTHUMB_TUCK   &EZ_SK(LSHIFT)
+  #define LTHUMB_TUCK   &shift_caps
   #define LTHUMB_HOME   LTHUMB_TT
   #define LTHUMB_REACH  &mt GUI_OPT REACH_TAP
   #define RTHUMB_REACH  &mt ALT_CTL ENTER
   #define RTHUMB_HOME   RTHUMB_TT
   #define RTHUMB_TUCK   &sym_shift_altgr
-#elifdef HT_HOME_ROW_MODS
-  #define LTHUMB_TUCK   &EZ_SK(LSHIFT)
+#elif defined HT_HOME_ROW_MODS || defined HT_CALLUM_MODS
+  #define LTHUMB_TUCK   &shift_caps
   #define LTHUMB_HOME   LTHUMB_HRM
   #define LTHUMB_REACH  &sc HRM_LAYER REACH_TAP
   #define RTHUMB_REACH  &sc HRM_LAYER ENTER
   #define RTHUMB_HOME   RTHUMB_HRM
   #define RTHUMB_TUCK   &sym_shift_altgr
-#elifdef HT_TWO_THUMB_KEYS
+#elif defined HT_TWO_THUMB_KEYS || defined HT_CALLUM_MODS_2TK
   #define LTHUMB_TUCK   &mt LSHIFT REACH_TAP
   #define LTHUMB_HOME   LTHUMB_S34
   #define LTHUMB_REACH  LTHUMB_TUCK
@@ -159,7 +149,7 @@
   #define NAV_LTHUMB_TUCK   &kp LS(TAB)
   #define NAV_LTHUMB_REACH  &none
 #else
-  #define NAV_LTHUMB_TUCK   &kp CAPS
+  #define NAV_LTHUMB_TUCK   &EZ_SK(LSHIFT)
   #define NAV_LTHUMB_REACH  &kp LS(TAB)
 #endif
 
@@ -234,6 +224,21 @@
       tapping-term-ms = <TAPPING_TERM>;
       flavor = "tap-preferred";
       bindings = <&kp>, <&osm>;
+      hold-while-undecided;
+    };
+
+    // mod‐morph to have Capslock on double‐tap Shift
+    OMIT_IF_NO_REF shift_caps: shift_caps {
+      compatible = "zmk,behavior-mod-morph";
+      #binding-cells = <0>;
+      bindings  = <&EZ_SK(LSHIFT)>, <&unshift_caps>;
+      mods      = <(MOD_LSFT)>;
+    };
+    // removes Sticky Left Shift before activating caps word
+    OMIT_IF_NO_REF unshift_caps: unshift_caps {
+      compatible = "zmk,behavior-macro";
+      #binding-cells = <0>;
+      bindings = <&macro_tap &kp K_CANCEL>, <&caps_word>;
     };
 
     // mod-morphs to restore Shift+Space and Ctrl+Backspace for certain keymaps
@@ -310,14 +315,6 @@
       bindings = <&lkp>, <&losm>;
     };
 
-    // Fancy behaviors for one-handed Alt(+Shift)+{tab,backtick}
-    OMIT_IF_NO_REF mhsc: space_cade_with_held_mods {
-      compatible = "zmk,behavior-mod-hold";
-      #binding-cells = <2>;
-      binding = <&sc>;
-      mods-to-hold = <MOD_LALT>;
-    };
-
     OMIT_IF_NO_REF vim_prev: vim_prev {
       compatible = "zmk,behavior-mod-morph";
       #binding-cells = <0>;
@@ -334,12 +331,9 @@
       keep-mods = <(MOD_LALT|MOD_LGUI)>;
     };
 
-    OMIT_IF_NO_REF mh: raw_mod_hold {
-      compatible = "zmk,behavior-mod-hold";
-      #binding-cells = <2>;
-      binding = <&none>;
-      mods-to-hold = <(MOD_LCTL|MOD_RCTL|MOD_LALT|MOD_RALT|MOD_LGUI|MOD_RGUI)>;
-    };
+    MOD_HOLD_0(mh, &none, MOD_LCTL|MOD_RCTL|MOD_LALT|MOD_RALT|MOD_LGUI|MOD_RGUI)
+    MOD_HOLD_1(mhsc, &sc, MOD_LALT)
+    MOD_HOLD_2(mhhrm, &hrm, MOD_LCTL|MOD_RCTL|MOD_LALT|MOD_RALT|MOD_LGUI|MOD_RGUI)
 
     OMIT_IF_NO_REF mhkp: hrm_with_raw_mh_on_hold {
       compatible = "zmk,behavior-hold-tap";
@@ -348,13 +342,6 @@
       quick-tap-ms = <QUICK_TAP>;
       flavor = "tap-preferred";
       bindings = <&mh>, <&kp>;
-    };
-
-    OMIT_IF_NO_REF mhhrm: hrm_with_held_mods {
-      compatible = "zmk,behavior-mod-hold";
-      #binding-cells = <2>;
-      binding = <&hrm>;
-      mods-to-hold = <(MOD_LCTL|MOD_RCTL|MOD_LALT|MOD_RALT|MOD_LGUI|MOD_RGUI)>;
     };
   };
 };
