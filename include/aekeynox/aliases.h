@@ -130,6 +130,6 @@
   #define S_N9  &kp N9
 #endif
 
-#define X_SHGRAVE &kp LS(S_GRAVE)
+#define X_SHGRAVE &kp LS(GRAVE)
 #define X_PREVTAB &kp LC(LS(TAB))
 #define X_NEXTTAB &kp LC(TAB)
