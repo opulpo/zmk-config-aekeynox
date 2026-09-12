@@ -135,3 +135,7 @@
 #define X_NEXTTAB &kp LC(TAB)
 #define X_DUPL    &kp LC(I)
 #define X_CLON    &kp LA(I)
+#define X_PREVWOR &kp LC(LEFT)
+#define X_NEXTWOR &kp LC(RIGHT)
+#define X_SELPREV &kp LC(LS(LEFT))
+#define X_SELNEXT &kp LC(LS(RIGHT))
