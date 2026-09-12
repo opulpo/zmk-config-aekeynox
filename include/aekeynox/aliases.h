@@ -133,3 +133,5 @@
 #define X_SHGRAVE &kp LS(GRAVE)
 #define X_PREVTAB &kp LC(LS(TAB))
 #define X_NEXTTAB &kp LC(TAB)
+#define X_DUPL    &kp LC(I)
+#define X_CLON    &kp LA(I)
