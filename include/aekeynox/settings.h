@@ -153,24 +153,22 @@
 // #define CALLUM_NAVIGATION
 
 // [Experimental]
-// Uncomment the following line to enable the "mod-hold behavior" on the left
-// hand’s navigation layer key. Enabling this means that if the Alt key is held
-// when entering the navigation layer, Alt will only be released when nav is
-// released. This enables one-handed alt-tabs, but may cause unwanted side effects.
+// Uncomment the following line to enable the "mod-hold" behavior on
+// non-sticky layer keys. Enabling this means that any modifier held while
+// entering the nav/fn/num layers will only be released when returning to
+// the base layer. This is useful for:
+// - one-handed shortcuts (Alt + Tab, Alt + F4, Ctrl + page-up/down)
+// - carrying modifiers to fn-media when using the Thumb-Taps flavor
+// - not accidentally dropping Shift when selecting text
+// Note: you may have to release and rehold the layer to drop modifiers you
+// no longer need.
 
-#define ENABLE_MOD_HOLD_NAVIGATION
+#define ENABLE_MOD_HOLDS
 
 // Uncomment the following line to enable shift as a pinky HRM.
 // Useful for combined shortcuts, but NOT MEANT to type text!
 
 // #define HRM_SHIFT
-
-// [Experimental]
-// Uncomment the following line to enable a mod-hold behavior when holding
-// a pinky key. Useful for one-handed home row mods, when the modifier and
-// keycode ar on the same key (i.e. Ctrl + D)
-
-// #define PINKY_MOD_HOLD
 
 // Uncomment the following line to swap Space and Backspace.
 // Beware: this increases the typing load of the left thumb.
