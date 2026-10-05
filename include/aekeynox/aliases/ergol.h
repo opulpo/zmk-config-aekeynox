@@ -19,7 +19,10 @@
 #define X_DUPL  &kp CMD(I)
 #define X_VIMBK &kp CMD(B)
 #define X_LOCA  &kp CMD(H)
-#define X_FIND  &kp CMD(G)
+#define X_SEL_L &kp LS(LC(LEFT))
+#define X_MOV_L &kp LC(LEFT)
+#define X_MOV_R &kp LC(RIGHT)
+#define X_SEL_R &kp LS(LC(RIGHT))
 
 /**
  * Arsenik Symbols:
