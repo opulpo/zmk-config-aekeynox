@@ -15,8 +15,11 @@
 #define X_SAVE  &kp CMD(S)
 #define X_ALL   &kp CMD(A)
 
-#define X_DUPL  &kp CMD(I)
 #define X_NEWT  &kp CMD(K)
+#define X_DUPL  &kp CMD(I)
+#define X_VIMBK &kp CMD(B)
+#define X_LOCA  &kp CMD(H)
+#define X_FIND  &kp CMD(G)
 
 /**
  * Arsenik Symbols:
